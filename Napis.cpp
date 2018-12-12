@@ -45,9 +45,13 @@ Napis::Napis(const Napis & wzor)
 Napis::~Napis()
 {
 	delete[] m_pszNapis;
+	m_pszNapis = nullptr;
 }
 Napis & Napis::operator=(const Napis & wzor)
 {
+	if (this == &wzor)
+		return *this;
+
 	m_nDl = wzor.m_nDl;
 	m_pszNapis = new char[m_nDl + 1];
 	strcpy(m_pszNapis, wzor.m_pszNapis);

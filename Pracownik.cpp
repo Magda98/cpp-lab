@@ -93,6 +93,8 @@ Pracownik::~Pracownik()
 
 Pracownik & Pracownik::operator=(const Pracownik & wzor)
 {
+	if (this == &wzor)
+		return *this;
 	m_Nazwisko = wzor.m_Nazwisko;
 	m_Imie = wzor.m_Imie;
 	m_DataUrodzenia = wzor.m_DataUrodzenia;
