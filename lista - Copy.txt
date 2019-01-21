@@ -1,0 +1,4 @@
+Cezary	Bober	8 6 1998
+Pawel	Knap	4 4 1998	Mechanika	10
+Magda	Kochman	10 5 1998	Gierizabaw	15
+Michal	Kruczek	7 6 1998

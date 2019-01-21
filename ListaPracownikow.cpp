@@ -4,9 +4,8 @@
 
 void ListaPracownikow::Dodaj(const Pracownik & p)
 {
-	Pracownik *k = new Pracownik(p);
+	Pracownik *k = p.KopiaObiektu();
 	Pracownik *ap = m_pPoczatek;
-
 	if (m_nLiczbaPracownikow == 0) {
 		m_pPoczatek = k;
 		k->m_pNastepny = nullptr;
@@ -20,6 +19,11 @@ void ListaPracownikow::Dodaj(const Pracownik & p)
 	else if (p.Porownaj(*ap) > 0)
 	{
 		while(true){
+			if (p == *ap)
+			{
+				delete k;
+				break;
+			}
 			if (ap->m_pNastepny == nullptr) {
 				ap->m_pNastepny = k;
 				m_nLiczbaPracownikow++;
@@ -64,7 +68,7 @@ void ListaPracownikow::WypiszPracownikow() const
 {
 	Pracownik *ap = m_pPoczatek;
 	for(int i = 0; i < m_nLiczbaPracownikow; i++){
-		ap->Wypisz();
+		ap->WypiszDane();
 		ap = ap->m_pNastepny;
 	}
 }
@@ -82,6 +86,20 @@ const Pracownik * ListaPracownikow::Szukaj(const char * nazwisko, const char * i
 	return nullptr;
 }
 
+void ListaPracownikow::Zapisz()
+{
+	std::ofstream zplik;
+	zplik.open("lista2.txt");
+	Pracownik *ap = m_pPoczatek;
+	for (int i = 0; i < m_nLiczbaPracownikow; i++) {
+		ap->WypiszDanePlik(zplik);
+		ap = ap->m_pNastepny;
+	}
+	zplik.close();
+	remove("lista.txt");
+	rename("lista2.txt", "lista.txt");
+}
+
 ListaPracownikow::ListaPracownikow()
 {
 	m_pPoczatek = nullptr;
@@ -91,4 +109,11 @@ ListaPracownikow::ListaPracownikow()
 
 ListaPracownikow::~ListaPracownikow()
 {
+	Pracownik *ap = m_pPoczatek;
+	for (int i = 0; i < m_nLiczbaPracownikow - 1; i++) {
+		Pracownik *k = ap->m_pNastepny;
+		delete ap;
+		ap = k;
+	}
+
 }

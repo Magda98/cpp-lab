@@ -1,9 +1,10 @@
 #include <iostream>
+#include <fstream>
 #include "Data.h"
 #include "Napis.h"
 #include "Pracownik.h"
 #include "ListaPracownikow.h"
-
+#include "Kierownik.h"
 
 
 //L03 Kochman Magdalena
@@ -11,77 +12,101 @@
 
 
 int main() {
-//	Pracownik p;
-//	Pracownik d;
-//	Pracownik k;
-//	Pracownik l;
-//	ListaPracownikow list;
-////	Data d;
-//	Napis s;
-//	//char np[20] = "asdsdasd";
-//	//s.Ustaw(np);
-//	//s.Wypisz();
-//	Napis imie, nazwisko;
-//	p.Wpisz();
-//	d.Wpisz();
-//	k.Wpisz();
-//	l.Wpisz();
-//	list.Dodaj(p);
-//	list.Dodaj(d);
-//	list.Dodaj(k);
-//	list.Dodaj(l);
-//	std::cout << std::endl;
-//	list.WypiszPracownikow();
-//
-//	std::cout << "usuniecie:" << std::endl;
-//	imie.Wpisz();
-//	nazwisko.Wpisz();
-//
-//	list.Usun(*list.Szukaj(nazwisko.Zwroc(), imie.Zwroc() ));
-//
-//	std::cout << std::endl;
-//	list.WypiszPracownikow();
-//
-//	imie.Wpisz();
-//	nazwisko.Wpisz();
-//
-//	list.Usun(*list.Szukaj(nazwisko.Zwroc(), imie.Zwroc()));
-//
-//	std::cout << std::endl;
-//	list.WypiszPracownikow();
-//	imie.Wpisz();
-//	nazwisko.Wpisz();
-//
-//	list.Usun(*list.Szukaj(nazwisko.Zwroc(), imie.Zwroc()));
-//
-//	std::cout << std::endl;
-//	list.WypiszPracownikow();
-//	imie.Wpisz();
-//	nazwisko.Wpisz();
-//
-//	list.Usun(*list.Szukaj(nazwisko.Zwroc(), imie.Zwroc()));
-//
-//	std::cout << std::endl;
-//	list.WypiszPracownikow();
+	int war = 1;
+	char x;
+	Napis imie, naziwsko, napis;
+	int lp;
+	bool kier = false;
+	Data data(1,1,1);
+	ListaPracownikow lista;
+	std::ifstream oplik;
 
-	Pracownik ppp;
-	ppp.Wpisz();
-	Napis nap = "xddddd";
-	Napis xd = nap;
-	Napis xp;
-	xd.Ustaw("pppp");
-	Data d(5, 12, 2018);
-	xp = nap;
-	xp.Ustaw("hahaha");
-	std::cout << d << " " << nap << " " << xd << " " << xp << std::endl;
-	std::cout << (nap == xd);
-	//std::cout << d;
-	std::cout << "\n"<< ppp << std::endl;
-	std::cin >> d;
-	std::cout << std::endl;
-	std::cout << d;
-
-	system("pause");
+	while (war)
+	{
+		std::cin.clear();
+		std::cout << "d - dodaj pracownika\nk - dodaj kierownika\ns - szukaj \nu - usun\nw - wypisz pracownikow\nq - wyjdz\no - odczytaj z pliku\nz - zapisz do pliku" << std::endl;
+		std::cin >> x;
+		switch (x)
+		{
+		case 'd':
+		{
+			Pracownik *p = new Pracownik();
+			p->Wpisz();
+			lista.Dodaj(*p);
+			break;
+		}
+		case 'k':
+		{
+			Kierownik *k = new Kierownik("", "" , 1 , 1, 1, "dzial", 0);
+			std::cin >> *k;
+			lista.Dodaj((Pracownik&)*k);
+			break;
+		}
+		case 's':
+			std::cout << "podaj imie: ";
+			std::cin >> imie;
+			std::cout << "podaj nazwisko: ";
+			naziwsko.Wpisz();
+			std::cout << *lista.Szukaj(naziwsko.Zwroc(), imie.Zwroc());
+			break;
+		case 'u':
+			std::cout << "podaj imie: ";
+			std::cin >> imie;
+			std::cout << "podaj nazwisko: ";
+			std::cin >> naziwsko;
+			lista.Usun(*lista.Szukaj(naziwsko.Zwroc(), imie.Zwroc()));
+			break;
+		case 'w':
+			lista.WypiszPracownikow();
+			break;
+		case 'o':
+		{
+			oplik.open("lista.txt");
+			while (!(oplik.eof()))
+			{
+				x = oplik.peek();
+				if (x == '\n') oplik.get(x);
+				x = oplik.peek();
+				if ((('A' <= x) && (x <= 'Z')) || (('a' <= x) && (x <= 'z')))
+				{
+					oplik >> imie;
+					oplik >> naziwsko;
+					oplik >> data;
+					if (oplik.peek() == '\t') {
+						oplik >> napis;
+						oplik >> lp;
+						kier = true;
+					}
+					if (strlen(imie.Zwroc()) != 0 && !kier)
+					{
+						Pracownik *p = new Pracownik(imie.Zwroc(), naziwsko.Zwroc(), data.Dzien(), data.Miesiac(), data.Rok());
+						lista.Dodaj(*p);
+					}
+					else if(kier == true)
+					{
+						Kierownik *k = new Kierownik(imie.Zwroc(), naziwsko.Zwroc(), data.Dzien(), data.Miesiac(), data.Rok(), napis.Zwroc(), lp);
+						lista.Dodaj((Pracownik&)*k);
+						kier = false;
+					}
+				}
+				else
+				{
+					break;
+				}
+			}
+			oplik.close();
+		}
+			break;
+		case 'z':
+			lista.Zapisz();
+			break;
+		case 'q':
+			war = 0;
+			break;
+		default:
+			break;
+		}
+		std::cout << std::endl;
+	}
 	return 0;
 }
-

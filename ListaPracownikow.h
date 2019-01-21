@@ -1,4 +1,5 @@
 #pragma once
+#include <fstream>
 #include "Pracownik.h"
 class ListaPracownikow
 {
@@ -11,6 +12,7 @@ public:
 	void Usun(const Pracownik &wzorzec);
 	void WypiszPracownikow() const;
 	const Pracownik* Szukaj(const char* nazwiko, const char* imie) const;
+	void Zapisz();
 	ListaPracownikow();
 	~ListaPracownikow();
 };

@@ -7,6 +7,7 @@ const char * Napis::Zwroc() const
 
 void Napis::Ustaw(const char * nowy_napis)
 {
+	delete[] m_pszNapis;
 	m_nDl = strlen(nowy_napis);
 	m_pszNapis = new char[m_nDl + 1];
 	strcpy(m_pszNapis, nowy_napis);
@@ -45,13 +46,13 @@ Napis::Napis(const Napis & wzor)
 Napis::~Napis()
 {
 	delete[] m_pszNapis;
-	m_pszNapis = nullptr;
 }
 Napis & Napis::operator=(const Napis & wzor)
 {
 	if (this == &wzor)
 		return *this;
 
+	delete[]m_pszNapis;
 	m_nDl = wzor.m_nDl;
 	m_pszNapis = new char[m_nDl + 1];
 	strcpy(m_pszNapis, wzor.m_pszNapis);
@@ -70,8 +71,53 @@ std::ostream &operator<<(std::ostream &wy, const Napis &p)
 }
 std::istream &operator>>(std::istream &we, Napis &p) 
 {
-	we >> p.m_pszNapis;
-	p.m_nDl = strlen(p.m_pszNapis);
+	if (&we == &std::cin) 
+	{
+		char buf[40];
+		we >> buf[0];
+		we.get(buf + 1, 39);
+		p.Ustaw(buf);
+		while (we.peek() != '\n')
+		{
+			we.get(buf, 40);
+			p += buf;
+		}
+		we.get();//'\n'
+	}
+	else
+	{
+		char temp[2];
+		char buf;
+		we >> buf;
+		temp[0] = buf;
+		temp[1] = '\0';
+		p.Ustaw(temp);
+		while ((we.peek() != '\t') && (we.peek() != '\0') && (we.peek() != '\n'))
+		{	
+			we >> buf;
+			temp[0] = buf;
+			temp[1] = '\0';
+			p += temp;
+		}
+		we.get();//'\n'
+	}
 	return we;
+}
+void Napis::operator+=(const char * n)
+{
+	if (n == nullptr) return;
+	m_nDl += strlen(n);
+	char *pn = new char[m_nDl + 1];
+	if (m_pszNapis == nullptr)
+	{
+		strcpy(pn, n);
+	}
+	else
+	{
+		strcpy(pn, m_pszNapis);
+		strcat(pn, n);
+	}
+	delete[]m_pszNapis;
+	m_pszNapis = pn;
 }
 

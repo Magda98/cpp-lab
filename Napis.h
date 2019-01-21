@@ -21,6 +21,7 @@ public:
 
 	Napis & operator=(const Napis &wzor);
 	bool operator==(const Napis &wzor) const;
+	void Napis::operator+=(const char * n);
 	friend std::ostream &operator<<(std::ostream &wy, const Napis &p);
 	friend std::istream &operator>>(std::istream &we, Napis &p);
 };

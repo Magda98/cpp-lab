@@ -92,7 +92,7 @@ int Data::Porownaj(const Data & wzor) const {
 		x = 1;
 	else if (wzor.Rok() == m_nRok && wzor.Miesiac() == m_nMiesiac && wzor.Dzien() > m_nDzien)
 		x = 1;
-		return x;
+	return x;
 }
 
 
@@ -101,18 +101,23 @@ Data::Data(int d, int m, int r)
 	m_nDzien = d;
 	m_nRok = r;
 	m_nMiesiac = m;
+	this->Koryguj();
 }
 Data::~Data()
 {
 }
 
 std::ostream & operator<<(std::ostream &wy, const Data &d) {
-	wy << d.m_nDzien << "-" << d.m_nMiesiac << "-" << d.m_nRok;
+	if(&wy == &std::cout)
+		wy << d.m_nDzien << "-" << d.m_nMiesiac << "-" << d.m_nRok;
+	else
+		wy << d.m_nDzien << " " << d.m_nMiesiac << " " << d.m_nRok;
 	return wy;
 }
 std::istream & operator >> (std::istream &we, Data & d) {
 	we >> d.m_nDzien;
 	we >> d.m_nMiesiac;
 	we >> d.m_nRok;
+	d.Koryguj();
 	return we;
 }

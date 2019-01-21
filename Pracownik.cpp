@@ -1,6 +1,6 @@
 #include "Pracownik.h"
 
-int Pracownik::ID = 0;
+int Pracownik::ID = 0; 
 
 int Pracownik::Porownaj(const Pracownik & wzorzec) const
 {
@@ -32,6 +32,11 @@ const char * Pracownik::Imie() const
 const char * Pracownik::Nazwisko() const
 {
 	return m_Nazwisko.Zwroc();
+}
+
+Data  Pracownik::DataUrodzenia() const
+{
+	return m_DataUrodzenia;
 }
 
 void Pracownik::Imie(const char * nowe_imie)
@@ -69,6 +74,21 @@ void Pracownik::Wpisz()
 
 }
 
+void Pracownik::WypiszDane()
+{
+	std::cout << *this << std::endl;
+}
+
+void Pracownik::WypiszDanePlik(std::ostream &plik)
+{
+	plik << *this << std::endl;
+}
+
+Pracownik  *  Pracownik::KopiaObiektu()const
+{
+	return  new Pracownik(*this);
+}
+
 int Pracownik::SprawdzImie(const char * por_imie) const
 {
 	return m_Imie.SprawdzNapis(por_imie);
@@ -79,12 +99,11 @@ int Pracownik::SprawdzNazwisko(const char * por_nazwisko) const
 	return m_Nazwisko.SprawdzNapis(por_nazwisko);
 }
 
-Pracownik::Pracownik(const char* im, const char * naz, int dzien, int miesiac, int rok) : m_DataUrodzenia(dzien, miesiac, rok), m_nIDZatrudnienia{ID++}
+Pracownik::Pracownik(const char* im, const char * naz, int dzien, int miesiac, int rok) : m_Imie(im), m_Nazwisko(naz) ,m_DataUrodzenia(dzien, miesiac, rok), m_nIDZatrudnienia{ID++}
 {
-	this->Imie(im);
-	this->Nazwisko(naz);
+	m_pNastepny = nullptr;
 }
-Pracownik::Pracownik(const Pracownik & wzor) : m_DataUrodzenia(wzor.m_DataUrodzenia), m_Imie(wzor.m_Imie), m_Nazwisko(wzor.m_Nazwisko),m_nIDZatrudnienia{ID++}
+Pracownik::Pracownik(const Pracownik & wzor) :  m_Imie(wzor.m_Imie), m_Nazwisko(wzor.m_Nazwisko), m_DataUrodzenia(wzor.m_DataUrodzenia),m_pNastepny{nullptr}, m_nIDZatrudnienia{ID++}
 {
 }
 Pracownik::~Pracownik()
@@ -98,12 +117,14 @@ Pracownik & Pracownik::operator=(const Pracownik & wzor)
 	m_Nazwisko = wzor.m_Nazwisko;
 	m_Imie = wzor.m_Imie;
 	m_DataUrodzenia = wzor.m_DataUrodzenia;
-
+	m_pNastepny = nullptr;
 	return *this;
 }
 
 bool Pracownik::operator==(const Pracownik & wzor) const
 {
+	if (this == &wzor)
+		return  true;
 	if (Porownaj(wzor) == 0)
 		return true;
 	return false;

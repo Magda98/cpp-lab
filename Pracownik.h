@@ -19,11 +19,15 @@ public:
 	int Porownaj(const Pracownik& wzorzec) const;
 	const char* Imie() const;
 	const char* Nazwisko() const;
+	Data  DataUrodzenia() const;
 	void Imie(const char* nowe_imie);
 	void Nazwisko(const char* nowe_nazwisko);
 	void DataUrodzenia(int nowy_dzien, int nowy_miesiac, int nowy_rok);
 	void Wypisz() const;
 	void Wpisz();
+	virtual void WypiszDane();
+	virtual void WypiszDanePlik(std::ostream &plik);
+	virtual Pracownik* KopiaObiektu()const;
 	int SprawdzImie(const char* por_imie) const;
 	int SprawdzNazwisko(const char* por_nazwisko) const;
 
